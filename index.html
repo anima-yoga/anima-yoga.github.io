@@ -28,7 +28,10 @@
   var fromUrl = new URLSearchParams(location.search).get("n");
   if (fromUrl && /^\d+$/.test(fromUrl)) set(fromUrl);
   var n = get();
-  document.getElementById("app").src = APP + (n ? "?n=" + n : "");
+  // Открыт ли трекер с иконки на экране «Домой» (а не в обычном браузере)
+  var home = (window.navigator.standalone === true) ||
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  document.getElementById("app").src = APP + "?via=gh&home=" + (home ? "1" : "0") + (n ? "&n=" + n : "");
   // Приложение сообщает номер после входа или регистрации, и телефон его запоминает
   window.addEventListener("message", function(e){
     if (e.data && e.data.moyDenN && /^\d+$/.test(String(e.data.moyDenN))) set(e.data.moyDenN);
