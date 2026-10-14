@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мой день</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Мой день">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F7F8F5">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+  html,body{margin:0;height:100%;background:#F7F8F5}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;
+    padding-top:env(safe-area-inset-top,0px);box-sizing:border-box;background:#F7F8F5}
+</style>
+</head>
+<body>
+<iframe id="app" title="Мой день" allow="clipboard-write"></iframe>
+<script>
+  // Адрес приложения из таблицы: «Настройки» → B6
+  var APP = "https://script.google.com/macros/s/AKfycbweu6saZWc3WbsZzq_gNmGPZ2X8RU5xa0J2c3uIPl8TGWjTNKN47G3hmzvAJ0qZiRuR/exec";
+  function get(){ try { return localStorage.getItem("moyDenN"); } catch(e){ return null; } }
+  function set(n){ try { localStorage.setItem("moyDenN", String(n)); } catch(e){} }
+  var fromUrl = new URLSearchParams(location.search).get("n");
+  if (fromUrl && /^\d+$/.test(fromUrl)) set(fromUrl);
+  var n = get();
+  document.getElementById("app").src = APP + (n ? "?n=" + n : "");
+  // Приложение сообщает номер после входа или регистрации, и телефон его запоминает
+  window.addEventListener("message", function(e){
+    if (e.data && e.data.moyDenN && /^\d+$/.test(String(e.data.moyDenN))) set(e.data.moyDenN);
+  });
+</script>
+</body>
+</html>
